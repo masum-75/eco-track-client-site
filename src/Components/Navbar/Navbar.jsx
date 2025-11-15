@@ -10,22 +10,22 @@ const Navbar = () => {
   const links = (
     <>
       <li>
-        <NavLink to={"/"} className={"font-semebold"}>
+        <NavLink to={"/"} className={"font-semibold"}>
           Home
         </NavLink>
       </li>
       <li>
-        <NavLink to={"/challenges"} className={"font-semebold"}>
+        <NavLink to={"/challenges"} className={"font-semibold"}>
           Challenges
         </NavLink>
       </li>
       <li>
-        <NavLink to={"/eco-tips"} className={"font-semebold"}>
+        <NavLink to={"/tips"} className={"font-semibold"}>
           Eco Tips
         </NavLink>
       </li>
       <li>
-        <NavLink to={"/events"} className={"font-semebold"}>
+        <NavLink to={"/events"} className={"font-semibold"}>
           Events
         </NavLink>
       </li>
@@ -92,7 +92,7 @@ const Navbar = () => {
                       className="w-10 mx-auto rounded-full overflow-hidden border border-primary"
                       src={
                         user?.photoURL ||
-                        "https://i.ibb.co.com/tp3xgXbG/avater.jpg"
+                        "https://sanishtech.com/i/6918a48ec775c7.75838870-1763222670.png"
                       }
                       alt="Avater"
                     />

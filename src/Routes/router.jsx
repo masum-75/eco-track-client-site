@@ -29,7 +29,7 @@ const router = createBrowserRouter([
             element: <Home/>,
         },
         {
-            path: '//tips',
+            path: '/tips',
             element: <EcoTips/>,
         },
         {
@@ -49,7 +49,7 @@ const router = createBrowserRouter([
             element: <Login/>
         },
         {
-            path: '/*',
+            path: '*',
             element: <Error404/>,
         },
         {

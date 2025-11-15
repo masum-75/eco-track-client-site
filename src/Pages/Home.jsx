@@ -9,7 +9,7 @@ import RecentTips from '../Components/Home/RecentTips';
 import UpcomingEvents from '../Components/Home/UpcomingEvents';
 import WhyGoGreen from '../Components/Home/WhyGoGreen';
 import HowItWorks from '../Components/Home/HowItWorks';
-import Newsletter from '../Components/Newsletter';
+
 
 const Home = () => {
 
@@ -20,8 +20,8 @@ const Home = () => {
         if(error){
         return <Error404/>
        }
-       const featuredchallenges = challenges.slice(0, 8);
-       console.log(featuredchallenges)
+       const featureChallenges = challenges.slice(0, 8);
+       console.log(featureChallenges)
     return (
         <div>
             <HeroSlider/>
@@ -31,7 +31,6 @@ const Home = () => {
             <UpcomingEvents/>
             <WhyGoGreen/>
             <HowItWorks/>
-            <Newsletter/>
         </div>
     );
 };

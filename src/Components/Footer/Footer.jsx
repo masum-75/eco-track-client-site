@@ -58,7 +58,7 @@ const Footer = () => {
                     </h3>
                     <ul className="space-y-2">
                         <li>
-                            <Link to="/eco-tips" className="hover:text-[#82B532]">
+                            <Link to="/tips" className="hover:text-[#82B532]">
                                 Eco Tips
                             </Link>
                         </li>
@@ -67,16 +67,7 @@ const Footer = () => {
                                 Events
                             </Link>
                         </li>
-                        <li>
-                            <Link to="/impact-tracker" className="hover:text-[#82B532]">
-                                Impact Tracker
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/community" className="hover:text-[#82B532]">
-                                Community
-                            </Link>
-                        </li>
+                       
 
                     </ul>
                 </div>

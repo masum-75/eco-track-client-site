@@ -24,7 +24,7 @@ const EventDetails = () => {
     const fetchEvent = async () => {
       try {
         const res = await axios.get(
-          `https://ecotrack-api.vercel.app/api/events/${id}`
+          `http://localhost:3000/events/${id}`
         );
         setEvent(res.data);
       } catch (error) {

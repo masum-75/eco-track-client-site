@@ -1,22 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import useChallenges from "../Hooks/useChallenges";
-import useParticipants from "../Hooks/useParticipants";
 import Loading from "./Loading";
 import Container from "../Layouts/Container";
 import { toast } from "react-toastify";
-import ParticipantCard from "../Components/ParticipantCard";
 import Swal from "sweetalert2";
 
-
 const ViewChallenge = () => {
-  const { participants } = useParticipants();
   const { id } = useParams();
   const { challenges, loading, error } = useChallenges();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [localChallenge, setLocalChallenge] = useState(null);
 
-  // Initialize localChallenge when challenges are loaded
   useEffect(() => {
     if (!loading && challenges.length > 0) {
       const found = challenges.find((c) => c._id === id);
@@ -24,7 +19,6 @@ const ViewChallenge = () => {
     }
   }, [challenges, id, loading]);
 
-  
   const getCurrentDateTime = () => {
     const now = new Date();
     return now.toLocaleString("en-GB", {
@@ -37,7 +31,6 @@ const ViewChallenge = () => {
     });
   };
 
-  
   const [formData, setFormData] = useState({
     participantName: "",
     participantEmail: "",
@@ -57,33 +50,31 @@ const ViewChallenge = () => {
   if (!localChallenge)
     return <p className="text-center mt-10">Challenge not found.</p>;
 
-  
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
- 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-   
     const result = await Swal.fire({
       title: "Are you sure?",
       text: "Do you want to join this challenge?",
       icon: "question",
       showCancelButton: true,
-      confirmButtonText: "Yes, Join! ",
-      cancelButtonText: " Cancel",
+      confirmButtonText: "Yes, Join!",
+      cancelButtonText: "Cancel",
       buttonsStyling: false,
       customClass: {
         confirmButton:
-          "bg-[#297B33] hover:bg-[#82B532] text-white py-2 px-4 rounded-xl transition-colors",
+          "bg-[#297B33] hover:bg-[#82B532] text-white py-2 px-4 rounded-xl",
         cancelButton:
-          "bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-xl transition-colors",
+          "bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-xl",
       },
     });
 
-    if (!result.isConfirmed) return; 
+    if (!result.isConfirmed) return;
+
     try {
       const participantRes = await fetch(
         "https://ecotrack-api.vercel.app/api/participants",
@@ -104,7 +95,6 @@ const ViewChallenge = () => {
       }
 
       if (participantRes.ok) {
-        
         setLocalChallenge((prev) => ({
           ...prev,
           participants: (prev.participants || 0) + 1,
@@ -112,7 +102,6 @@ const ViewChallenge = () => {
 
         setIsModalOpen(false);
 
-        // Reset form
         setFormData({
           participantName: "",
           participantEmail: "",
@@ -124,7 +113,6 @@ const ViewChallenge = () => {
           progress: 0,
         });
 
-        // Success alert
         Swal.fire({
           title: "Joined!",
           text: "You have successfully joined this challenge.",
@@ -133,7 +121,7 @@ const ViewChallenge = () => {
           buttonsStyling: false,
           customClass: {
             confirmButton:
-              "bg-[#297B33] hover:bg-[#82B532] text-white py-2 px-4 rounded-xl transition-colors",
+              "bg-[#297B33] hover:bg-[#82B532] text-white py-2 px-4 rounded-xl",
           },
         });
       } else {
@@ -159,63 +147,36 @@ const ViewChallenge = () => {
             />
           </div>
 
-          
+          {/* Right: Details */}
           <div className="md:w-1/2 w-full p-6 flex flex-col justify-between bg-gray-50">
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">
               {localChallenge.title}
             </h2>
 
             <div className="text-start space-y-2 text-gray-700 text-sm">
-              <p>
-                <span className="font-medium text-gray-900">Category:</span>{" "}
-                {localChallenge.category}
-              </p>
-              <p>
-                <span className="font-medium text-gray-900">Duration:</span>{" "}
-                {localChallenge.duration} days
-              </p>
-              <p>
-                <span className="font-medium text-gray-900">Participants:</span>{" "}
-                {localChallenge.participants}
-              </p>
-              <p>
-                <span className="font-medium text-gray-900">Created By:</span>{" "}
-                {localChallenge.createdBy}
-              </p>
-              <p>
-                <span className="font-medium text-gray-900">Start Date:</span>{" "}
-                {localChallenge.startDate}
-              </p>
-              <p>
-                <span className="font-medium text-gray-900">End Date:</span>{" "}
-                {localChallenge.endDate}
-              </p>
-              <p>
-                <span className="font-medium text-gray-900">Target:</span>{" "}
-                {localChallenge.target}
-              </p>
-              <p>
-                <span className="font-medium text-gray-900">Impact Metric:</span>{" "}
-                {localChallenge.impactMetric}
-              </p>
-              <p>
-                <span className="font-medium text-gray-900">Description:</span>{" "}
-                {localChallenge.description}
-              </p>
+              <p><span className="font-medium">Category:</span> {localChallenge.category}</p>
+              <p><span className="font-medium">Duration:</span> {localChallenge.duration} days</p>
+              <p><span className="font-medium">Participants:</span> {localChallenge.participants}</p>
+              <p><span className="font-medium">Created By:</span> {localChallenge.createdBy}</p>
+              <p><span className="font-medium">Start Date:</span> {localChallenge.startDate}</p>
+              <p><span className="font-medium">End Date:</span> {localChallenge.endDate}</p>
+              <p><span className="font-medium">Target:</span> {localChallenge.target}</p>
+              <p><span className="font-medium">Impact Metric:</span> {localChallenge.impactMetric}</p>
+              <p><span className="font-medium">Description:</span> {localChallenge.description}</p>
             </div>
 
             <button
               onClick={() => setIsModalOpen(true)}
-              className="mt-6 text-center bg-[#297B33] hover:bg-[#82B532] text-white py-2 rounded-xl transition-colors duration-300 w-full font-medium"
+              className="mt-6 bg-[#297B33] hover:bg-[#82B532] text-white py-2 rounded-xl w-full font-medium"
             >
               Join Challenge
             </button>
           </div>
         </div>
 
-        
+        {/* Modal */}
         {isModalOpen && (
-          <div className="fixed inset-0 bg-black/70 bg-opacity-30 flex justify-center items-center z-50">
+          <div className="fixed inset-0 bg-black/70 flex justify-center items-center z-50">
             <div className="bg-white rounded-2xl w-11/12 md:w-2/5 p-6 shadow-xl relative overflow-y-auto">
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -231,47 +192,45 @@ const ViewChallenge = () => {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="flex gap-3">
                   <div className="w-1/2">
-                    <label className="block text-gray-700 text-sm mb-1">
-                      Participant Name
-                    </label>
+                    <label className="text-sm mb-1">Participant Name</label>
                     <input
                       type="text"
                       name="participantName"
                       value={formData.participantName}
                       onChange={handleChange}
                       required
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-green-200"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2"
                     />
                   </div>
 
                   <div className="w-1/2">
-                    <label className="block text-gray-700 text-sm mb-1">Email</label>
+                    <label className="text-sm mb-1">Email</label>
                     <input
                       type="email"
                       name="participantEmail"
                       value={formData.participantEmail}
                       onChange={handleChange}
                       required
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-green-200"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2"
                     />
                   </div>
                 </div>
 
                 <div className="flex gap-3">
                   <div className="w-1/2">
-                    <label className="block text-gray-700 text-sm mb-1">Location</label>
+                    <label className="text-sm mb-1">Location</label>
                     <input
                       type="text"
                       name="location"
                       value={formData.location}
                       onChange={handleChange}
                       required
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-green-200"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2"
                     />
                   </div>
 
                   <div className="w-1/2">
-                    <label className="block text-gray-700 text-sm mb-1">Join Date</label>
+                    <label className="text-sm mb-1">Join Date</label>
                     <input
                       type="text"
                       name="joinDate"
@@ -283,30 +242,30 @@ const ViewChallenge = () => {
                 </div>
 
                 <div>
-                  <label className="block text-gray-700 text-sm mb-1">Image URL</label>
+                  <label className="text-sm mb-1">Image URL</label>
                   <input
                     type="url"
                     name="imageUrl"
                     value={formData.imageUrl}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-green-200"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-gray-700 text-sm mb-1">Description / Notes</label>
+                  <label className="text-sm mb-1">Description / Notes</label>
                   <textarea
                     name="notes"
                     value={formData.notes}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-green-200"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
                     rows="3"
                   ></textarea>
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full bg-[#297B33] hover:bg-[#82B532] text-white py-2 rounded-xl font-medium transition-all"
+                  className="w-full bg-[#297B33] hover:bg-[#82B532] text-white py-2 rounded-xl font-medium"
                 >
                   Submit
                 </button>
@@ -314,22 +273,6 @@ const ViewChallenge = () => {
             </div>
           </div>
         )}
-
-       
-        <div className="text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-[#297B33]">
-            Joined Participants in This Challenge
-          </h2>
-          <p className="text-gray-600 mt-2 text-sm md:text-base">
-            See who has joined and is actively contributing to making a difference in this challenge.
-          </p>
-        </div>
-
-        <div className="grid justify-center grid-cols-1 lg:grid-cols-2 gap-6 py-10">
-          {participants.map((participant) => (
-            <ParticipantCard key={participant._id} participant={participant} />
-          ))}
-        </div>
       </Container>
     </div>
   );
