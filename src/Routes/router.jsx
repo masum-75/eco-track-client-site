@@ -29,7 +29,7 @@ const router = createBrowserRouter([
             element: <Home/>,
         },
         {
-            path: '/eco-tips',
+            path: '//tips',
             element: <EcoTips/>,
         },
         {
@@ -61,7 +61,7 @@ const router = createBrowserRouter([
             element: <Challenges/>,
         },
         {
-            path: '/challenges-add',
+            path: '/challenges/join/:id',
             element: <PrivateRoute><AddChallenges/></PrivateRoute>,
         },
         {
@@ -69,11 +69,11 @@ const router = createBrowserRouter([
             element: <PrivateRoute><ViewChallenge/></PrivateRoute>,
         },
         {
-            path: '/my-activities',
+            path: '/my-challenges',
             element: <PrivateRoute><MyActivities/></PrivateRoute>,
         },
         {
-            path: '/my-activities/:id',
+            path: '/my-challenges/:id',
             element: <PrivateRoute><EditChallenge/></PrivateRoute>,
         },
 
