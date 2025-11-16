@@ -40,7 +40,7 @@ const EditChallenge = () => {
     if (!id) return;
     const fetchChallenge = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/challenges`);
+        const res = await fetch(`https://eco-track-server-dun.vercel.app/challenges`);
         const data = await res.json();
         const challenge = data.find((c) => c._id === id);
         if (challenge) setFormData({ ...challenge });
@@ -80,7 +80,7 @@ const EditChallenge = () => {
     if (!validate()) return;
 
     try {
-      const res = await fetch(`http://localhost:3000/challenges/${id}`, {
+      const res = await fetch(`https://eco-track-server-dun.vercel.app/challenges/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -125,7 +125,7 @@ const EditChallenge = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const res = await fetch(`http://localhost:3000/challenges/${id}`, {
+          const res = await fetch(`https://eco-track-server-dun.vercel.app/challenges/${id}`, {
             method: "DELETE",
           });
           const data = await res.json();

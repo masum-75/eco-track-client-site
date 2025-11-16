@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { Link, NavLink } from "react-router";
 import { AuthContext } from "../../Context/AuthContext";
 import Container from "../../Layouts/Container";
+import logo from "./logo.jpg";
 
 const Navbar = () => {
   const { user, signOutUser, loading } = useContext(AuthContext);
@@ -32,7 +33,7 @@ const Navbar = () => {
     </>
   );
   return (
-    <div className="shadow-sm bg-white/30 backdrop-blur  sticky top-0 z-10">
+    <div className="shadow-sm bg-black backdrop-blur  sticky top-0 z-10">
       <Container>
         <nav>
           <div className="navbar ">
@@ -71,10 +72,7 @@ const Navbar = () => {
                 className=" flex  items-center text-[#82B532] text-xl font-semibold"
               >
                 <figure className="w-12 pr-1">
-                  <img
-                    src={"https://i.ibb.co.com/tpnX8gT8/site-logo2.png"}
-                    alt="Site Logo"
-                  />
+                  <img src={logo} alt="Site Logo" />
                 </figure>
                 <span className="text-[#297B33]">Eco</span>Track
               </Link>

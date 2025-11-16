@@ -77,7 +77,7 @@ const ViewChallenge = () => {
 
     try {
       const participantRes = await fetch(
-        "https://ecotrack-api.vercel.app/api/participants",
+        "http://localhost:3000/challenges",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -189,7 +189,7 @@ const ViewChallenge = () => {
                 Join {localChallenge.title}
               </h3>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4 text-black">
                 <div className="flex gap-3">
                   <div className="w-1/2">
                     <label className="text-sm mb-1">Participant Name</label>

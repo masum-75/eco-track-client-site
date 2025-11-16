@@ -17,14 +17,14 @@ const EventDetails = () => {
     email: "",
     userLocation: "",
   });
-  const [joining, setJoining] = useState(false); // Button loading state
+  const [joining, setJoining] = useState(false); 
 
   // Fetch event details
   useEffect(() => {
     const fetchEvent = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:3000/events/${id}`
+          `https://eco-track-server-dun.vercel.app/events/${id}`
         );
         setEvent(res.data);
       } catch (error) {
@@ -52,7 +52,7 @@ const EventDetails = () => {
     try {
       setJoining(true);
 
-      await axios.post("http://localhost:3000/joined-events", {
+      await axios.post("https://eco-track-server-dun.vercel.app/joined-events", {
         participantName: formData.name,
         participantEmail: formData.email,
         participantLocation: formData.userLocation, 

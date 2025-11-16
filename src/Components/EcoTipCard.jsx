@@ -17,7 +17,7 @@ const EcoTipCard = ({ tip }) => {
       
       setVoteCount(prev => prev + 1);
 
-      await axios.patch(`http://localhost:3000/tips/${_id}/upvote`);
+      await axios.patch(`https://eco-track-server-dun.vercel.app/tips/${_id}/upvote`);
 
     } catch (error) {
       console.error("Error upvoting:", error);

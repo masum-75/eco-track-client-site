@@ -74,7 +74,7 @@ const AddChallenges = () => {
       createdBy: user.email,
     });
   
-    fetch(`http://localhost:3000/challenges`, {
+    fetch(`https://eco-track-server-dun.vercel.app/challenges`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
