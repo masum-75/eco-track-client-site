@@ -77,8 +77,7 @@ const Login = () => {
     )
       return;
 
-    setLoading(true); // Start loading
-    // console.log("Form Submitted:", formData);
+    setLoading(true); 
 
     // firebase user Create functionalities
     const email = formData.email;
@@ -103,7 +102,6 @@ const Login = () => {
   const handleGoogleSignIn = () => {
     signInWithGoogle()
       .then((result) => {
-        // console.log("Data after create user in firebase", result.user);
         const user = result.user;
         const newUser = {
           name: user.displayName,
@@ -112,7 +110,7 @@ const Login = () => {
           accessToken: user.accessToken,
           registrationType: "google",
         };
-        // Now create user in the database
+       
         fetch(`https://eco-track-server-dun.vercel.app/users`, {
           method: "POST",
           headers: {

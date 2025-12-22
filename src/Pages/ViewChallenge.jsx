@@ -77,7 +77,7 @@ const ViewChallenge = () => {
 
     try {
       const participantRes = await fetch(
-        "http://localhost:3000/challenges",
+        "https://eco-track-server-dun.vercel.app/challenges",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

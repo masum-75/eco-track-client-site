@@ -15,7 +15,7 @@ const MyActivities = () => {
 
   const fetchChallenges = async () => {
     try {
-      const res = await fetch("http://localhost:3000/challenges");
+      const res = await fetch("https://eco-track-server-dun.vercel.app/challenges");
       const data = await res.json();
       const userChallenges = data.filter((c) => c.createdBy === user.email);
       setChallenges(userChallenges);
