@@ -24,7 +24,7 @@ const EventDetails = () => {
     const fetchEvent = async () => {
       try {
         const res = await axios.get(
-          `https://eco-track-server-dun.vercel.app/events/${id}`
+          `https://eco-track-server-orcin.vercel.app/events/${id}`
         );
         setEvent(res.data);
       } catch (error) {
@@ -52,7 +52,7 @@ const EventDetails = () => {
     try {
       setJoining(true);
 
-      await axios.post("https://eco-track-server-dun.vercel.app/joined-events", {
+      await axios.post("https://eco-track-server-orcin.vercel.app/joined-events", {
         participantName: formData.name,
         participantEmail: formData.email,
         participantLocation: formData.userLocation, 

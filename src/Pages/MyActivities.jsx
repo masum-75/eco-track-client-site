@@ -15,7 +15,7 @@ const MyActivities = () => {
 
   const fetchChallenges = async () => {
     try {
-      const res = await fetch("https://eco-track-server-dun.vercel.app/challenges");
+      const res = await fetch("https://eco-track-server-orcin.vercel.app/challenges");
       const data = await res.json();
       const userChallenges = data.filter((c) => c.createdBy === user.email);
       setChallenges(userChallenges);
@@ -45,7 +45,7 @@ const MyActivities = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const res = await fetch(`https://eco-track-server-dun.vercel.app/challenges/${id}`, {
+          const res = await fetch(`https://eco-track-server-orcin.vercel.app/challenges/${id}`, {
             method: "DELETE",
           });
           const data = await res.json();

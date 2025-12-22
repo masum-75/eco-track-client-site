@@ -111,7 +111,7 @@ const Login = () => {
           registrationType: "google",
         };
        
-        fetch(`https://eco-track-server-dun.vercel.app/users`, {
+        fetch(`https://eco-track-server-orcin.vercel.app/users`, {
           method: "POST",
           headers: {
             "content-type": "application/json",

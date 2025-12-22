@@ -6,7 +6,7 @@ import useEcoTips from '../../Hooks/useEcoTips';
 const RecentTips = () => {
     const {EcoTips} = useEcoTips();
 
-      // Sort tips by createdAt (newest first)
+    
   const recentTips = [...EcoTips].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 6);
 
 

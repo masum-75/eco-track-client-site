@@ -9,7 +9,7 @@ const useEvents = () => {
 
     useEffect(()=> {
         setLoading(true)
-        axios('https://eco-track-server-dun.vercel.app/events')
+        axios('https://eco-track-server-orcin.vercel.app/events')
         .then(res => setEvents(res.data))
         .catch(err => setError(err))
         .finally(()=> setLoading(false))

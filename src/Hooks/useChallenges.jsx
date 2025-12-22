@@ -11,7 +11,7 @@ const useChallenges = () => {
 
     useEffect(()=> {
         setLoading(true);
-        axios('https://eco-track-server-dun.vercel.app/challenges')
+        axios('https://eco-track-server-orcin.vercel.app/challenges')
         .then(res => setChallenges(res.data))
         .catch(err => setError(err))
         .finally(()=> setLoading(false))

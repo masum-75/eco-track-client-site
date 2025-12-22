@@ -9,7 +9,7 @@ const useAllChallenges = (filters = {}) => {
   useEffect(() => {
     setLoading(true);
 
-    axios('https://eco-track-server-dun.vercel.app/challenges')
+    axios('https://eco-track-server-orcin.vercel.app/challenges')
       .then(res => {
         let data = res.data;
 
