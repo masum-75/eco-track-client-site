@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaArrowLeft, FaCloudUploadAlt, FaCalendarAlt } from "react-icons/fa";
 import { AuthContext } from "../Context/AuthContext";
 import { useParams, useNavigate } from "react-router";
 import Swal from "sweetalert2";
@@ -35,7 +35,6 @@ const EditChallenge = () => {
     "Waste Reduction",
   ];
 
-  // Fetch challenge data
   useEffect(() => {
     if (!id) return;
     const fetchChallenge = async () => {
@@ -45,7 +44,6 @@ const EditChallenge = () => {
         const challenge = data.find((c) => c._id === id);
         if (challenge) setFormData({ ...challenge });
       } catch (error) {
-        console.error(error);
         Swal.fire("Error", "Failed to load challenge data", "error");
       } finally {
         setLoading(false);
@@ -54,27 +52,19 @@ const EditChallenge = () => {
     fetchChallenge();
   }, [id]);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.title) newErrors.title = "Title is required";
-    if (!formData.category) newErrors.category = "Category is required";
-    if (!formData.description) newErrors.description = "Description is required";
-    if (!formData.duration || isNaN(formData.duration))
-      newErrors.duration = "Duration must be a number";
-    if (!formData.target) newErrors.target = "Target is required";
-    if (!formData.impactMetric) newErrors.impactMetric = "Impact metric required";
-    if (!formData.startDate) newErrors.startDate = "Start date required";
-    if (!formData.endDate) newErrors.endDate = "End date required";
-    if (!formData.imageUrl) newErrors.imageUrl = "Image URL required";
+    const requiredFields = ["title", "category", "description", "target", "impactMetric", "startDate", "endDate", "imageUrl"];
+    requiredFields.forEach(field => {
+      if (!formData[field]) newErrors[field] = `${field.charAt(0).toUpperCase() + field.slice(1)} is required`;
+    });
+    if (!formData.duration || isNaN(formData.duration)) newErrors.duration = "Duration must be a number";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // Update challenge
   const handleUpdate = async (e) => {
     e.preventDefault();
     if (!validate()) return;
@@ -88,63 +78,41 @@ const EditChallenge = () => {
       const data = await res.json();
       if (data.modifiedCount) {
         Swal.fire({
-          title: "Updated!",
-          text: "Challenge updated successfully.",
+          title: "Mission Updated!",
           icon: "success",
-          confirmButtonText: "OK",
+          confirmButtonText: "Return to Workspace",
           buttonsStyling: false,
-          customClass: {
-            confirmButton: "bg-[#297B33] hover:bg-[#82B532] text-white py-2 px-4 rounded-xl",
-          },
+          customClass: { confirmButton: "bg-emerald-500 text-slate-950 py-3 px-8 rounded-xl font-black" },
         });
         navigate("/my-activities");
       } else {
-        Swal.fire("Info", "No changes detected.", "info");
+        Swal.fire("No Changes", "Form content is identical to saved data.", "info");
       }
     } catch (error) {
-      console.error(error);
-      Swal.fire("Error", "Failed to update challenge.", "error");
+      Swal.fire("Error", "Failed to sync changes.", "error");
     }
   };
 
-
   const handleDelete = async () => {
     Swal.fire({
-      title: "Are you sure?",
-      text: "This challenge will be deleted permanently!",
+      title: "Terminate Mission?",
+      text: "This action is irreversible and will remove all participant data!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "Cancel",
+      confirmButtonText: "Yes, Delete Permanently",
       buttonsStyling: false,
       customClass: {
-        confirmButton: "bg-[#297B33] hover:bg-[#82B532] text-white py-2 px-4 rounded-xl mr-2",
-        cancelButton: "bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded-xl",
-        popup: "swal2-popup-custom",
+        confirmButton: "bg-red-500 hover:bg-red-600 text-white py-3 px-6 rounded-xl font-bold mr-3",
+        cancelButton: "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 py-3 px-6 rounded-xl font-bold"
       },
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const res = await fetch(`https://eco-track-server-orcin.vercel.app/challenges/${id}`, {
-            method: "DELETE",
-          });
+          const res = await fetch(`https://eco-track-server-orcin.vercel.app/challenges/${id}`, { method: "DELETE" });
           const data = await res.json();
-          if (data.deletedCount) {
-            Swal.fire({
-              title: "Deleted!",
-              text: "Challenge has been deleted.",
-              icon: "success",
-              confirmButtonText: "OK",
-              buttonsStyling: false,
-              customClass: {
-                confirmButton: "bg-[#297B33] hover:bg-[#82B532] text-white py-2 px-4 rounded-xl",
-              },
-            });
-            navigate("/my-activities");
-          }
+          if (data.deletedCount) navigate("/my-activities");
         } catch (error) {
-          console.error(error);
-          Swal.fire("Error", "Failed to delete challenge.", "error");
+          Swal.fire("Error", "Deletion failed.", "error");
         }
       }
     });
@@ -153,156 +121,71 @@ const EditChallenge = () => {
   if (loading) return <Loading />;
 
   return (
-    <div className="py-20">
-      <div className="max-w-xl mx-auto p-6 bg-white shadow-md rounded-lg">
-        <h2 className="text-2xl text-center font-bold mb-6 text-[#297B33]">
-          Edit Challenge
-        </h2>
+    <div className="min-h-screen bg-white dark:bg-slate-950 py-20 px-4 transition-colors duration-500">
+      <div className="max-w-3xl mx-auto">
+        {/* Navigation & Header */}
+        <div className="flex justify-between items-center mb-10">
+          <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-slate-500 hover:text-emerald-500 font-bold transition-colors">
+            <FaArrowLeft /> Workspace
+          </button>
+          <h2 className="text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">
+            Manage <span className="text-emerald-500">Challenge</span>
+          </h2>
+        </div>
 
-        <form onSubmit={handleUpdate} className="space-y-4">
-          {/* Title */}
-          <div>
-            <label className="block font-medium mb-1">Title</label>
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              className="input input-bordered w-full"
-            />
-            {errors.title && <p className="text-red-500 text-sm">{errors.title}</p>}
-          </div>
-
+        <form onSubmit={handleUpdate} className="bg-slate-50 dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 lg:p-12 shadow-2xl space-y-8">
           
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block font-medium mb-1">Start Date</label>
-              <input
-                type="date"
-                name="startDate"
-                value={formData.startDate}
-                onChange={handleChange}
-                className="input input-bordered w-full"
-              />
-              {errors.startDate && <p className="text-red-500 text-sm">{errors.startDate}</p>}
+          {/* Main Info Section */}
+          <div className="space-y-6">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase text-slate-500 ml-2">Challenge Title</label>
+              <input type="text" name="title" value={formData.title} onChange={handleChange} className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-6 py-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all shadow-sm" />
+              {errors.title && <p className="text-red-500 text-[10px] font-bold mt-1 ml-2">{errors.title}</p>}
             </div>
-            <div>
-              <label className="block font-medium mb-1">End Date</label>
-              <input
-                type="date"
-                name="endDate"
-                value={formData.endDate}
-                onChange={handleChange}
-                className="input input-bordered w-full"
-              />
-              {errors.endDate && <p className="text-red-500 text-sm">{errors.endDate}</p>}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-1">
+                <label className="text-[10px] font-black uppercase text-slate-500 ml-2"><FaCalendarAlt className="inline mr-1"/> Start Date</label>
+                <input type="date" name="startDate" value={formData.startDate} onChange={handleChange} className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-6 py-4 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500" />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-black uppercase text-slate-500 ml-2"><FaCalendarAlt className="inline mr-1"/> End Date</label>
+                <input type="date" name="endDate" value={formData.endDate} onChange={handleChange} className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-6 py-4 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-1">
+                <label className="text-[10px] font-black uppercase text-slate-500 ml-2">Target Metric</label>
+                <input type="text" name="target" value={formData.target} onChange={handleChange} placeholder="e.g. 500kg CO2" className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-6 py-4 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500" />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-black uppercase text-slate-500 ml-2">Mission Category</label>
+                <select name="category" value={formData.category} onChange={handleChange} className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-6 py-4 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 appearance-none">
+                  <option value="">Select Category</option>
+                  {categories.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase text-slate-500 ml-2"><FaCloudUploadAlt className="inline mr-1"/> Cover Image URL</label>
+              <input type="text" name="imageUrl" value={formData.imageUrl} onChange={handleChange} className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-6 py-4 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500" />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase text-slate-500 ml-2">Mission Description</label>
+              <textarea name="description" value={formData.description} onChange={handleChange} rows="4" className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-6 py-4 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 resize-none"></textarea>
             </div>
           </div>
 
-         
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block font-medium mb-1">Image URL</label>
-              <input
-                type="text"
-                name="imageUrl"
-                value={formData.imageUrl}
-                onChange={handleChange}
-                className="input input-bordered w-full"
-              />
-              {errors.imageUrl && <p className="text-red-500 text-sm">{errors.imageUrl}</p>}
-            </div>
-            <div>
-              <label className="block font-medium mb-1">Created By</label>
-              <input
-                type="text"
-                name="createdBy"
-                value={user.email}
-                disabled
-                className="input w-full bg-gray-200"
-              />
-            </div>
-          </div>
-
-          
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block font-medium mb-1">Target</label>
-              <input
-                type="text"
-                name="target"
-                value={formData.target}
-                onChange={handleChange}
-                className="input input-bordered w-full"
-              />
-            </div>
-            <div>
-              <label className="block font-medium mb-1">Duration (days)</label>
-              <input
-                type="number"
-                name="duration"
-                value={formData.duration}
-                onChange={handleChange}
-                className="input input-bordered w-full"
-              />
-            </div>
-          </div>
-
-          
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block font-medium mb-1">Impact Metric</label>
-              <input
-                type="text"
-                name="impactMetric"
-                value={formData.impactMetric}
-                onChange={handleChange}
-                className="input input-bordered w-full"
-              />
-            </div>
-            <div>
-              <label className="block font-medium mb-1">Category</label>
-              <select
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                className="select select-bordered w-full"
-              >
-                <option value="">Select Category</option>
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          
-          <div>
-            <label className="block font-medium mb-1">Description</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              className="textarea textarea-bordered w-full"
-            />
-          </div>
-
-         
-          <div className="flex flex-col md:flex-row gap-4">
-            <button
-              type="submit"
-              className="btn w-full md:w-1/2 bg-[#297B33] hover:bg-[#82B532] text-white flex items-center justify-center"
-            >
-              <FaEdit className="mr-2" /> Update
+          {/* Actions Section */}
+          <div className="pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row gap-4">
+            <button type="submit" className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black py-5 rounded-2xl transition-all shadow-xl hover:shadow-emerald-500/20 flex items-center justify-center gap-3">
+              <FaEdit /> Sync Changes
             </button>
-            <button
-              type="button"
-              onClick={handleDelete}
-              className="btn w-full md:w-1/2 bg-red-600 hover:bg-red-700 text-white flex items-center justify-center"
-            >
-              <FaTrash className="mr-2" /> Delete
+            <button type="button" onClick={handleDelete} className="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white font-black px-10 py-5 rounded-2xl transition-all flex items-center justify-center gap-3 border border-red-500/20">
+              <FaTrash /> Delete
             </button>
           </div>
         </form>

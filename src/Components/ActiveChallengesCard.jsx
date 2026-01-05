@@ -1,77 +1,51 @@
 import React from "react";
 import { Link } from "react-router";
+import { FaArrowRight, FaClock, FaUsers } from "react-icons/fa";
 
 const ActiveChallengesCard = ({ challenge }) => {
   return (
-    <div className="flex flex-col md:flex-row bg-white rounded-2xl shadow-lg hover:shadow-xl overflow-hidden transform hover:-translate-y-1 transition-all duration-300 max-w-4xl mx-auto border border-gray-300">
-
-      {/* Image */}
-      <div className="md:w-1/2 w-full">
-        <img
-          src={challenge.imageUrl}
-          alt={challenge.title}
-          className="w-full h-48 md:h-full object-cover"
+    <div className="group flex flex-col bg-slate-50 dark:bg-slate-900 rounded-[2rem] border border-slate-100 dark:border-slate-800 overflow-hidden hover:shadow-2xl hover:border-emerald-500/30 transition-all duration-500 h-full">
+      
+      {/* Visual Section - Image on Top */}
+      <div className="relative h-56 overflow-hidden">
+        <img 
+          src={challenge.imageUrl} 
+          alt={challenge.title} 
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
         />
+        {/* Category Badge */}
+        <div className="absolute top-4 left-4 px-3 py-1 bg-emerald-500 text-slate-950 text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg">
+           {challenge.category}
+        </div>
+        {/* Overlay gradient for a premium feel */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
       </div>
 
-      {/* Content */}
-      <div className="md:w-1/2 w-full p-6 flex flex-col justify-between bg-white">
+      {/* Info Section */}
+      <div className="p-6 lg:p-8 flex flex-col flex-grow">
+        <div className="flex-grow">
+          <h2 className="text-xl font-black text-slate-900 dark:text-white mb-4 line-clamp-2 group-hover:text-emerald-500 transition-colors duration-300 min-h-[56px]">
+            {challenge.title}
+          </h2>
 
-        {/* Title */}
-        <h2 className="text-2xl font-bold text-black mb-4">
-          {challenge.title}
-        </h2>
-
-        {/* Details */}
-        <div className="text-start space-y-2 text-black text-[16px] leading-relaxed">
-
-          <p>
-            <span className="font-semibold">Category:</span>{" "}
-            {challenge.category}
-          </p>
-
-          <p>
-            <span className="font-semibold">Duration:</span>{" "}
-            {challenge.duration} days
-          </p>
-
-          <p>
-            <span className="font-semibold">Participants:</span>{" "}
-            {challenge.participants}
-          </p>
-
-          <p>
-            <span className="font-semibold">Created By:</span>{" "}
-            {challenge.createdBy}
-          </p>
-
-          <p>
-            <span className="font-semibold">Start Date:</span>{" "}
-            {challenge.startDate}
-          </p>
-
-          <p>
-            <span className="font-semibold">End Date:</span>{" "}
-            {challenge.endDate}
-          </p>
-
-          <p>
-            <span className="font-semibold">Target:</span>{" "}
-            {challenge.target}
-          </p>
-
-          <p>
-            <span className="font-semibold">Impact Metric:</span>{" "}
-            {challenge.impactMetric}
-          </p>
+          <div className="flex items-center justify-between border-y border-slate-200/50 dark:border-slate-800/50 py-4 mb-6">
+            <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+                <FaClock className="text-emerald-500 text-xs" />
+                <span className="text-[11px] font-black uppercase tracking-wider">{challenge.duration} Days</span>
+            </div>
+            <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+                <FaUsers className="text-emerald-500 text-xs" />
+                <span className="text-[11px] font-black uppercase tracking-wider">{challenge.participants} Joined</span>
+            </div>
+          </div>
         </div>
 
-        {/* View Button */}
-        <Link
-          to={`/challenges/${challenge._id}`}
-          className="mt-6 w-full text-center bg-[#297B33] hover:bg-[#82B532] text-white py-2 rounded-xl font-medium transition"
+        {/* Action Button */}
+        <Link 
+          to={`/challenges/${challenge._id}`} 
+          className="w-full inline-flex items-center justify-center gap-2 bg-slate-900 dark:bg-slate-800 group-hover:bg-emerald-500 text-white group-hover:text-slate-950 py-4 rounded-xl font-black transition-all duration-300 shadow-md text-xs uppercase tracking-[0.1em]"
         >
-          View Challenge
+          Explore Mission <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>
     </div>

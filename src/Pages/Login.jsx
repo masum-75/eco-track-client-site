@@ -1,271 +1,146 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Container from "../Layouts/Container";
-import { useContext } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import { IoEyeOff } from "react-icons/io5";
-import { FaEye } from "react-icons/fa";
+import { FaEye, FaGoogle } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [show, setShow] = useState(false);
-  const [errors, setErrors] = useState({});
-  const { signInWithGoogle, setLoading, setUser, loginUser, loading } =
-    useContext(AuthContext);
+  const { signInWithGoogle, setLoading, setUser, loginUser, loading } = useContext(AuthContext);
+  
   const location = useLocation();
   const from = location.state || "/";
   const navigate = useNavigate();
-  // console.log(from);
 
-  //  All Validation Patterns
-  const patterns = {
-    email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-    uppercase: /[A-Z]/,
-    lowercase: /[a-z]/,
-    specialChar: /[^A-Za-z0-9]/,
-    minLength: /^.{6,}$/,
-  };
-
-  // All Validation Function
-  const validateField = (name, value) => {
-    let message = "";
-
-    if (name === "email") {
-      if (!value.trim()) message = "Email is required.";
-      else if (!patterns.email.test(value))
-        message = "Enter a valid email address.";
-    } else if (name === "password") {
-      if (!patterns.minLength.test(value))
-        message = "Password must be at least 6 characters.";
-      else if (!patterns.uppercase.test(value))
-        message = "Must contain at least one uppercase letter.";
-      else if (!patterns.lowercase.test(value))
-        message = "Must contain at least one lowercase letter.";
-      else if (!patterns.specialChar.test(value))
-        message = "Must include at least one special character.";
-    }
-
-    setErrors((prev) => ({ ...prev, [name]: message }));
-  };
-
-  // Handle OnChange
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-
-    // Validate immediately
-    validateField(name, value);
   };
 
   const handleLogin = (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    // Inline validation for each field
-    validateField("email", formData.email);
-    validateField("password", formData.password);
-
-    // Check if any error exists
-    if (
-      !formData.email ||
-      !formData.password ||
-      errors.email ||
-      errors.password
-    )
-      return;
-
-    setLoading(true); 
-
-    // firebase user Create functionalities
-    const email = formData.email;
-    const password = formData.password;
-
-    loginUser(email, password)
+    loginUser(formData.email, formData.password)
       .then((res) => {
-        // console.log(res);
         setUser(res.user);
+        toast.success("Welcome Back to EcoTrack!");
         navigate(from);
         setLoading(false);
-        toast.success("Login Successfull!");
       })
       .catch((e) => {
-        console.log(e);
-        toast.error(e.message);
+        setLoading(false);
+        toast.error("Invalid credentials.");
       });
   };
-
-  // signin with google
 
   const handleGoogleSignIn = () => {
     signInWithGoogle()
       .then((result) => {
-        const user = result.user;
-        const newUser = {
-          name: user.displayName,
-          email: user.email,
-          photoURL: user.photoURL,
-          accessToken: user.accessToken,
-          registrationType: "google",
-        };
-       
-        fetch(`https://eco-track-server-orcin.vercel.app/users`, {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify(newUser),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            console.log("Data after user submission: ", data);
-          });
         setLoading(false);
-        setUser(newUser);
-        toast.success("Login with Google Successfull!");
+        setUser(result.user);
+        toast.success("Google Login Successful!");
         navigate(from);
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch(() => setLoading(false));
   };
 
   return (
-    <div className="">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-slate-100 flex items-center justify-center py-12 px-4 relative overflow-hidden">
+      
+      <div className="absolute top-[-10%] left-[-10%] w-72 h-72 bg-emerald-200/30 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-slate-200/40 rounded-full blur-3xl"></div>
+
       <Container>
-        <div>
-          <div className="card mx-auto my-10 bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-            <div className="card-body">
-              <Link
-                to={"/"}
-                className=" mx-auto text-[#82B532] text-xl font-semibold"
-              >
-                <figure className="w-12 pr-1">
-                  <img
-                    src={"https://sanishtech.com/i/6918abb2f38f55.15644031-1763224498.png"}
-                    alt="Site Logo"
-                  />
-                </figure>
-              </Link>
-              <h1 className="text-3xl font-bold text-center ">
-                Login to EcoTrack
-              </h1>
-              <form onSubmit={handleLogin}>
-                <fieldset className="fieldset">
-                  {/* Email */}
-                  <label className="label">Your Email</label>
-                  <input
-                    onChange={handleChange}
-                    value={formData.email}
-                    type="email"
-                    name="email"
-                    required
-                    className={`input input-bordered w-full ${
-                      errors.email ? "border-red-500" : ""
-                    }`}
-                    placeholder="yourname@example.com"
-                  />
-                  {errors.email && (
-                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-                  )}
-                  {/* Password */}
-                  <label className="label">Password</label>
-                  <div className="relative">
-                    <input
-                      onChange={handleChange}
-                      value={formData.password}
-                      type={show ? "text" : "password"}
-                      name="password"
-                      required
-                      className={`input input-bordered w-full ${
-                        errors.password ? "border-red-500" : ""
-                      }`}
-                      placeholder="Password (e.g. MyPass123!)"
-                    />
-                    <span
-                      onClick={() => setShow(!show)}
-                      className="absolute text-lg right-8 top-[11px] cursor-pointer z-20"
-                    >
-                      {show ? <FaEye /> : <IoEyeOff />}
-                    </span>
-                  </div>
-                  {errors.password && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.password}
-                    </p>
-                  )}
+        <div className="max-w-md w-full mx-auto relative z-10">
+          <div className="text-center mb-6">
+          
+            <h2 className="text-3xl font-black text-slate-800 mt-4 tracking-tighter">
+              ECO<span className="text-emerald-500">TRACK</span>
+            </h2>
+          </div>
 
-                  <div>
-                    <Link
-                      to={"/forgot-password"}
-                      className="link link-hover hover:text-[#297B33]"
-                    >
-                      Forgot password?
-                    </Link>
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="btn text-white bg-[#297B33] hover:bg-[#82B532] mt-4 w-full"
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <>
-                        <span className="loading loading-spinner"></span>
-                        Logging in...
-                      </>
-                    ) : (
-                      "Log in"
-                    )}
-                  </button>
-                </fieldset>
-              </form>
-              {/* Google */}
-              <button
-                onClick={handleGoogleSignIn}
-                className="btn bg-white text-black border-[#e5e5e5]"
-              >
-                <svg
-                  aria-label="Google logo"
-                  width="16"
-                  height="16"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 512 512"
-                >
-                  <g>
-                    <path d="m0 0H512V512H0" fill="#fff"></path>
-                    <path
-                      fill="#34a853"
-                      d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"
-                    ></path>
-                    <path
-                      fill="#4285f4"
-                      d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"
-                    ></path>
-                    <path
-                      fill="#fbbc02"
-                      d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"
-                    ></path>
-                    <path
-                      fill="#ea4335"
-                      d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"
-                    ></path>
-                  </g>
-                </svg>
-                Continue with Google
-              </button>
-              <p className="text-center">
-                Don't have an account?{" "}
-                <Link
-                  to={"/register"}
-                  className={"font-semibold text-[#297B33] hover:underline"}
-                >
-                  Register
-                </Link>
-              </p>
+          <div className="bg-white/80 backdrop-blur-xl p-8 rounded-[3rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] border border-white">
+            <div className="text-center mb-8">
+               <h3 className="text-xl font-bold text-slate-900">Sign In</h3>
+               <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mt-1">Access your dashboard</p>
             </div>
+
+            <form onSubmit={handleLogin} className="space-y-4">
+              {/* Email */}
+              <div className="space-y-1">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="name@example.com"
+                  className="w-full px-6 py-4 bg-white/50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-semibold text-slate-700"
+                  required
+                />
+              </div>
+
+              {/* Password */}
+              <div className="space-y-1">
+                <div className="flex justify-between items-center px-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Password</label>
+                  <Link to="/forgot-password" size="sm" className="text-[10px] font-black uppercase text-emerald-600 hover:text-emerald-700">Forgot?</Link>
+                </div>
+                <div className="relative">
+                  <input
+                    type={show ? "text" : "password"}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="••••••••"
+                    className="w-full px-6 py-4 bg-white/50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-semibold text-slate-700"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShow(!show)}
+                    className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-500 transition-colors"
+                  >
+                    {show ? <FaEye size={18} /> : <IoEyeOff size={18} />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Action Button */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-slate-900 hover:bg-emerald-500 text-white font-black uppercase tracking-widest py-4 rounded-2xl transition-all duration-300 transform active:scale-95 shadow-xl shadow-slate-200 disabled:opacity-50 mt-2"
+              >
+                {loading ? <span className="loading loading-spinner loading-xs"></span> : "Enter Dashboard"}
+              </button>
+            </form>
+
+            <div className="relative my-8">
+              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-100"></div></div>
+              <div className="relative flex justify-center text-[10px] uppercase font-black tracking-widest text-slate-400">
+                <span className="bg-white/0 px-4">Social Login</span>
+              </div>
+            </div>
+
+            <button
+              onClick={handleGoogleSignIn}
+              className="w-full flex items-center justify-center gap-3 py-4 border border-slate-200 rounded-2xl hover:bg-slate-50 transition-all font-black text-xs uppercase tracking-widest text-slate-600"
+            >
+              <FaGoogle className="text-emerald-500" />
+              <span>Continue with Google</span>
+            </button>
+
+            <p className="text-center mt-8 text-xs font-bold text-slate-400 uppercase tracking-tighter">
+              New explorer?{" "}
+              <Link to="/register" className="text-emerald-600 hover:text-emerald-700">
+                Create Account
+              </Link>
+            </p>
           </div>
         </div>
       </Container>

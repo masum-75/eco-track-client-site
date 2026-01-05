@@ -15,6 +15,10 @@ import Events from "../Pages/Events";
 import EventDetails from "../Components/EventDetails";
 import ViewChallenge from "../Pages/ViewChallenge";
 import EditChallenge from "../Pages/EditChallenge";
+import DashboardLayout from "../Layouts/DashboardLayout";
+import ManageUsers from "../Pages/Dasboard/ManageUsers";
+import DashboardHome from "../Pages/Dasboard/DashboardHome";
+import ManageChallenges from "../Pages/Dasboard/ManageChallenges";
 
 
 const router = createBrowserRouter([
@@ -79,5 +83,22 @@ const router = createBrowserRouter([
 
     ]
   },
+  {
+    path: "dashboard",
+    element: <PrivateRoute><DashboardLayout /></PrivateRoute>,
+    children: [
+      { path: "overview", element: <DashboardHome /> },
+      
+      
+      { path: "manage-users", element: <ManageUsers /> },
+      
+     
+      { path: "manage-challenges", element: <ManageChallenges /> },
+      
+     
+      { path: "my-activities", element: <MyActivities /> },
+    ]
+  }
 ]);
+
 export default router;

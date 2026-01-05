@@ -5,40 +5,43 @@ import { Link } from "react-router";
 import useEvents from "../../Hooks/useEvents";
 
 const UpcomingEvents = () => {
+  const { events } = useEvents();
 
-const {events}= useEvents();
-// console.log(events);
-  // Sort by date (latest upcoming first)
-  const recentEvents = events?.sort((a, b) => new Date(a.date) - new Date(b.date))?.slice(0, 4); // Only 4 recent ones
+  const recentEvents = events ? [...events].sort((a, b) => new Date(a.date) - new Date(b.date)).slice(0, 4) : [];
 
   return (
-    <section className="py-16 bg-base-200" id="upcoming-events">
-      <div className="container mx-auto px-5">
-        {/* Heading */}
-        <div className="text-center mb-10">
-          <div className="flex justify-center text-[#297B33] items-center gap-2 mb-2">
-            <FaCalendarCheck size={24} />
-            <h2 className="text-3xl md:text-4xl font-bold">Upcoming Events</h2>
+    <section className="py-24 bg-white dark:bg-slate-950 transition-colors duration-500" id="upcoming-events">
+      <div className="container mx-auto px-6 lg:px-10">
+        
+        <div className="text-center mb-16">
+          <div className="flex justify-center items-center gap-3 mb-4 text-emerald-500">
+            <FaCalendarCheck size={28} className="animate-pulse" />
+            <h2 className="text-3xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white">
+              Upcoming <span className="text-emerald-500">Events</span>
+            </h2>
           </div>
-          <p className="text-gray-600 max-w-xl mx-auto">
-            Join our community initiatives and make a real difference in the environment.
+          <p className="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed">
+            Join our community initiatives and make a real difference in the environment. 
+            Together, we can build a sustainable future.
           </p>
+          <div className="h-1.5 w-24 bg-emerald-500 mx-auto mt-6 rounded-full opacity-50"></div>
         </div>
 
-        {/* Event Cards Grid */}
-        <div className="grid justify-center sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {recentEvents.map((event) => (
-            <EventsCard key={event._id} event={event}  />
-            
+            <EventsCard key={event._id} event={event} />
           ))}
         </div>
-        {/* View All Button */}
-        <div className="text-center mt-10">
-          <Link to={"/events"} className="btn bg-[#297B33] hover:bg-[#82B532] text-white transition-all">
+
+        <div className="text-center mt-20">
+          <Link 
+            to={"/events"} 
+            className="inline-flex items-center gap-2 px-10 py-4 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black rounded-2xl transition-all duration-300 shadow-[0_10px_25px_rgba(16,185,129,0.2)] hover:scale-105 active:scale-95 group"
+          >
             View All Events
+            <span className="group-hover:translate-x-1 transition-transform">→</span>
           </Link>
         </div>
-
       </div>
     </section>
   );

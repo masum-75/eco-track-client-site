@@ -7,46 +7,43 @@ import Container from "../Layouts/Container";
 
 const Events = () => {
   const { events, loading, error } = useEvents();
-  
-
-  if (loading) {
-    return (
-      <Container>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-10">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
-            <EcoTipCardSkeleton key={n} />
-          ))}
-        </div>
-      </Container>
-    );
-  }
-
-  if (error) {
-    return <p className="text-red-500 text-center mt-10">{error}</p>;
-  }
 
   return (
-    <section className="py-16 bg-base-200" id="upcoming-events">
-      <div className="container mx-auto px-5">
-      
-        <div className="text-center mb-10">
-          <div className="flex justify-center text-[#297B33] items-center gap-2 mb-2">
-            <FaCalendarCheck size={24} />
-            <h2 className="text-3xl font-bold">All Events</h2>
-          </div>
-          <p className="text-gray-600 max-w-xl mx-auto">
-            Join our community initiatives and make a real difference in the
-            environment.
+    <div className="min-h-screen bg-white dark:bg-slate-950 py-20 transition-colors duration-500">
+      <Container>
+        {/* Modern Header Section */}
+        <div className="text-center mb-16">
+          <span className="flex items-center justify-center gap-2 text-emerald-500 font-black tracking-[0.3em] uppercase text-[10px] mb-4">
+            <FaCalendarCheck /> Upcoming Gatherings
+          </span>
+          <h2 className="text-4xl md:text-6xl font-black text-slate-900 dark:text-white mb-6">
+            Global <span className="text-emerald-500">Events</span>
+          </h2>
+          <p className="text-slate-500 dark:text-slate-400 text-lg max-w-2xl mx-auto">
+            Join hands with fellow eco-warriors in real-world actions. Every participant counts.
           </p>
         </div>
 
-        <div className="grid justify-center sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {events.map((event) => (
-            <EventsCard key={event._id} event={event} />
-          ))}
-        </div>
-      </div>
-    </section>
+        {/* Content Section */}
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+              <EcoTipCardSkeleton key={n} />
+            ))}
+          </div>
+        ) : error ? (
+          <div className="text-center py-20 bg-red-500/10 rounded-[2.5rem] border border-red-500/20">
+            <p className="text-red-500 font-bold">{error}</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {events.map((event) => (
+              <EventsCard key={event._id} event={event} />
+            ))}
+          </div>
+        )}
+      </Container>
+    </div>
   );
 };
 

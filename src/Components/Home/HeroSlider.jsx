@@ -1,117 +1,92 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Autoplay } from "swiper/modules";
+import { Pagination, Autoplay, EffectFade } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
+import "swiper/css/effect-fade";
 import "./HeroSlider.css";
 import { Link } from "react-router";
+import { motion } from "framer-motion";
+import { ArrowRight, Leaf } from "lucide-react";
 
+const slides = [
+  {
+    title: "Join the Green Movement",
+    desc: "Be part of a sustainable community where every small action counts toward a cleaner planet.",
+    btnText: "Join Now",
+    link: "/events",
+    bg: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2026",
+  },
+  {
+    title: "Sustainability Challenges",
+    desc: "Test your eco-habits and join community challenges that make real-world impact.",
+    btnText: "Explore Now",
+    link: "/challenges",
+    bg: "https://images.unsplash.com/photo-1518173946687-a4c8a3b77bf2?q=80&w=1974",
+  },
+  {
+    title: "Track Your Eco Impact",
+    desc: "Monitor your personal progress, carbon savings, and celebrate your green wins!",
+    btnText: "Start Tracking",
+    link: "/my-activities",
+    bg: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070",
+  }
+];
 
 const HeroSlider = () => {
   return (
-    <div className="h-[80vh] w-full overflow-hidden">
+    <div className="h-[85vh] w-full overflow-hidden relative group">
       <Swiper
-        direction="vertical"
-        pagination={{ clickable: true }}
-        autoplay={{ delay: 3000, disableOnInteraction: false }}
+        effect={"fade"}
+        pagination={{ clickable: true, dynamicBullets: true }}
+        autoplay={{ delay: 5000, disableOnInteraction: false }}
         loop={true}
-        modules={[Pagination, Autoplay]}
-        className="mySwiper h-full"
+        modules={[Pagination, Autoplay, EffectFade]}
+        className="h-full w-full"
       >
-        
-        <SwiperSlide>
-          <div className="flex flex-col items-center justify-center h-full bg-[#297B33] text-white text-center p-6">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Join the Green Movement
-            </h2>
-            <p className="max-w-xl mb-6 text-lg opacity-90">
-              Be part of a sustainable community where every small action
-              counts toward a cleaner, greener planet.
-            </p>
-            <Link to={"/events"} className="btn bg-[#82B532] hover:bg-[#A3E635] text-white border-none">
-              Join Now
-            </Link>
-          </div>
-        </SwiperSlide>
-
-        
-        <SwiperSlide>
-          <div className="flex flex-col items-center justify-center h-full bg-[#82B532] text-white text-center p-6">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Take Sustainability Challenges
-            </h2>
-            <p className="max-w-xl mb-6 text-lg opacity-90">
-              Test your eco-habits and join community challenges that make
-              real-world impact — from recycling to energy saving.
-            </p>
-            <Link to={"/challenges"} className="btn bg-white text-[#297B33] hover:bg-[#F0FDF4] border-none">
-              Explore Challenges
-            </Link>
-          </div>
-        </SwiperSlide>
-
-        <SwiperSlide>
-          <div
-            className="flex flex-col items-center justify-center h-full text-white text-center p-6 bg-cover bg-center"
-            style={{
-              backgroundImage:
-                "url('https://sanishtech.com/i/6918b5ab6b63d9.33952389-1763227051.jpg')",
-            }}
-          >
-            <div className="bg-black/40 p-10 rounded-2xl">
-              <h2 className="text-4xl md:text-5xl font-bold mb-4">
-                Discover Local Green Events
-              </h2>
-              <p className="max-w-xl mb-6 text-lg opacity-90">
-                Stay connected with local eco-initiatives, workshops, and
-                meetups that empower sustainable living.
-              </p>
-              <Link to={"/events"} className="btn bg-[#82B532] hover:bg-[#A3E635] text-white border-none">
-                Browse Events
-              </Link>
+        {slides.map((slide, index) => (
+          <SwiperSlide key={index}>
+            <div 
+              className="relative h-full w-full flex items-center justify-center bg-cover bg-center transition-transform duration-[10000ms] scale-110 group-hover:scale-100"
+              style={{ backgroundImage: `url('${slide.bg}')` }}
+            >
+              {/* Overlay for Readability */}
+              <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-[2px]"></div>
+              
+              <div className="relative z-10 text-center px-6 max-w-4xl">
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8 }}
+                >
+                  <div className="flex justify-center mb-6">
+                    <span className="bg-emerald-500/20 text-emerald-400 p-3 rounded-full backdrop-blur-md border border-emerald-500/30">
+                      <Leaf size={24} className="animate-pulse" />
+                    </span>
+                  </div>
+                  
+                  <h2 className="text-5xl md:text-8xl font-black text-white mb-6 tracking-tighter leading-none">
+                    {slide.title.split(" ").slice(0, -1).join(" ")}{" "}
+                    <span className="text-emerald-400 italic">{slide.title.split(" ").pop()}</span>
+                  </h2>
+                  
+                  <p className="text-lg md:text-xl text-slate-100 mb-10 max-w-2xl mx-auto font-medium opacity-90 leading-relaxed">
+                    {slide.desc}
+                  </p>
+                  
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <Link 
+                      to={slide.link} 
+                      className="group flex items-center gap-3 bg-emerald-500 hover:bg-emerald-600 text-slate-950 px-10 py-5 rounded-2xl font-black transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-emerald-500/20"
+                    >
+                      {slide.btnText} <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
+                    </Link>
+                  </div>
+                </motion.div>
+              </div>
             </div>
-          </div>
-        </SwiperSlide>
-
-        
-        <SwiperSlide>
-          <div className="flex flex-col items-center justify-center h-full bg-[#D9F99D] text-[#297B33] text-center p-6">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Track Your Eco Impact
-            </h2>
-            <p className="max-w-xl mb-6 text-lg opacity-90">
-              Monitor your personal progress, carbon savings, and contribution
-              to the environment — and celebrate your green wins!
-            </p>
-            <Link to={"/my-challenges"} className="btn bg-[#297B33] hover:bg-[#82B532] text-white border-none">
-              Start Tracking
-            </Link>
-          </div>
-        </SwiperSlide>
-
-        
-        <SwiperSlide>
-          <div
-            className="flex flex-col items-center justify-center h-full text-white text-center p-6 bg-cover bg-center"
-            style={{
-              backgroundImage:
-                "url('https://sanishtech.com/i/6918b61f49bdf9.35654502-1763227167.jpg')",
-            }}
-          >
-            <div className="bg-black/40 p-10 rounded-2xl">
-              <h2 className="text-4xl md:text-5xl font-bold mb-4">
-                Share Your Eco Tips
-              </h2>
-              <p className="max-w-xl mb-6 text-lg opacity-90">
-                Inspire others by sharing your sustainable habits and creative
-                eco-friendly hacks with the community.
-              </p>
-              <Link to={"/tips"} className="btn bg-[#82B532] hover:bg-[#A3E635] text-white border-none">
-                Share Tips
-              </Link>
-            </div>
-          </div>
-        </SwiperSlide>
+          </SwiperSlide>
+        ))}
       </Swiper>
     </div>
   );
